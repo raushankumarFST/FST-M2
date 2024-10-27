@@ -1,0 +1,15 @@
+-- drop tables
+drop table save_dialogue;
+drop table save_Count;
+create TABLE save_dialogue (Actor STRING, Dialogues STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+LOAD DATA LOCAL INPATH '/root/inputs/episodeIV_dialogues.txt' INTO TABLE save_dialogue;
+
+CREATE TABLE save_Count AS
+SELECT COUNT(*) AS luke_lines
+FROM save_dialogue
+WHERE Dialogues LIKE '%Luke%';
+
+INSERT OVERWRITE DIRECTORY 'hdfs:///user/raushan/HiveResult_2'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM save_Count;
